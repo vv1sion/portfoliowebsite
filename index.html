@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#101116" id="meta-theme-color">
+  <title>Minigames</title>
+  <meta name="description" content="Six browser minigames: Connect Four, Tic-Tac-Toe, Memory, Minesweeper, Pong and Snake.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%232f4be0'/%3E%3Ccircle cx='11' cy='11' r='4' fill='%23ffffff'/%3E%3Ccircle cx='21' cy='11' r='4' fill='%23f5c518'/%3E%3Ccircle cx='11' cy='21' r='4' fill='%23f5c518'/%3E%3Ccircle cx='21' cy='21' r='4' fill='%23ffffff'/%3E%3C/svg%3E">
+  <script>
+    (function () {
+      try {
+        const stored = localStorage.getItem('theme')
+        const theme = stored || (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark')
+        document.documentElement.setAttribute('data-theme', theme)
+        const meta = document.getElementById('meta-theme-color')
+        if (meta) meta.setAttribute('content', theme === 'dark' ? '#101116' : '#f5f6f8')
+      } catch (error) {
+        console.warn('localStorage is unavailable', error)
+      }
+    })()
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=8">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <button class="theme-switch" id="theme-toggle" type="button" role="switch" aria-checked="true" aria-label="Dark theme">
+        <span class="switch-track">
+          <span class="switch-thumb"></span>
+          <span class="switch-icon switch-sun">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/></svg>
+          </span>
+          <span class="switch-icon switch-moon">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+          </span>
+        </span>
+      </button>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <section class="hero">
+      <div class="wrap">
+        <h1>Pick a game.</h1>
+        <div class="game-picker"></div>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal" id="game-modal" hidden>
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modal-title" tabindex="-1">
+      <header class="modal-header">
+        <h2 class="modal-title" id="modal-title">Game</h2>
+        <button class="icon-btn" type="button" data-close aria-label="Close game">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </header>
+      <div class="modal-body">
+        <section class="game" data-game="connect-four" hidden>
+          <div class="game-main">
+            <div class="c4-drops" role="group" aria-label="Drop controls"></div>
+            <div class="c4-grid" role="grid" aria-label="Connect Four board"></div>
+          </div>
+          <aside class="side-panel">
+            <p class="status" role="status" aria-live="polite">Your turn.</p>
+            <ul class="meta" aria-label="Game statistics"></ul>
+            <button class="btn btn-primary reset" type="button">New game</button>
+          </aside>
+        </section>
+
+        <section class="game" data-game="tic-tac-toe" hidden>
+          <div class="game-main">
+            <div class="ttt-board" role="group" aria-label="Tic-Tac-Toe board"></div>
+          </div>
+          <aside class="side-panel">
+            <p class="status" role="status" aria-live="polite">Your turn.</p>
+            <ul class="meta" aria-label="Game statistics"></ul>
+            <button class="btn btn-primary reset" type="button">New game</button>
+          </aside>
+        </section>
+
+        <section class="game" data-game="memory" hidden>
+          <div class="game-main">
+            <div class="memory-grid" role="group" aria-label="Memory cards"></div>
+          </div>
+          <aside class="side-panel">
+            <p class="status" role="status" aria-live="polite">Moves 0</p>
+            <ul class="meta" aria-label="Game statistics"></ul>
+            <button class="btn btn-primary reset" type="button">New game</button>
+          </aside>
+        </section>
+
+        <section class="game" data-game="minesweeper" hidden>
+          <div class="game-main">
+            <div class="ms-board" role="group" aria-label="Minesweeper field"></div>
+            <div class="ms-controls">
+              <button class="btn btn-ghost ms-flag" type="button" aria-pressed="false">Flag mode: Off</button>
+              <span class="ms-timer" aria-hidden="true">0s</span>
+            </div>
+          </div>
+          <aside class="side-panel">
+            <p class="status" role="status" aria-live="polite">10 mines</p>
+            <ul class="meta" aria-label="Game statistics"></ul>
+            <button class="btn btn-primary reset" type="button">New game</button>
+          </aside>
+        </section>
+
+        <section class="game" data-game="pong" hidden>
+          <div class="game-main">
+            <div class="stage">
+              <canvas class="stage-canvas" width="720" height="440" aria-label="Pong game canvas"></canvas>
+              <div class="stage-overlay">
+                <p class="stage-overlay-text">Click or press Space to start</p>
+              </div>
+            </div>
+          </div>
+          <aside class="side-panel">
+            <p class="status" role="status" aria-live="polite">0 : 0</p>
+            <ul class="meta" aria-label="Game statistics"></ul>
+            <button class="btn btn-primary reset" type="button">New game</button>
+          </aside>
+        </section>
+
+        <section class="game" data-game="snake" hidden>
+          <div class="game-main">
+            <div class="stage">
+              <canvas class="stage-canvas" width="600" height="600" aria-label="Snake game canvas"></canvas>
+              <div class="stage-overlay">
+                <p class="stage-overlay-text">Click or press an arrow key to start</p>
+              </div>
+            </div>
+            <div class="dpad" role="group" aria-label="Directional controls">
+              <button class="dpad-up" type="button" data-dir="up" aria-label="Up">&#8593;</button>
+              <button class="dpad-left" type="button" data-dir="left" aria-label="Left">&#8592;</button>
+              <button class="dpad-down" type="button" data-dir="down" aria-label="Down">&#8595;</button>
+              <button class="dpad-right" type="button" data-dir="right" aria-label="Right">&#8594;</button>
+            </div>
+          </div>
+          <aside class="side-panel">
+            <p class="status" role="status" aria-live="polite">Score 0</p>
+            <ul class="meta" aria-label="Game statistics"></ul>
+            <button class="btn btn-primary reset" type="button">New game</button>
+          </aside>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <script src="storage.js?v=8" defer></script>
+  <script src="ui.js?v=8" defer></script>
+  <script src="connect-four.js?v=8" defer></script>
+  <script src="tic-tac-toe.js?v=8" defer></script>
+  <script src="snake.js?v=8" defer></script>
+  <script src="memory.js?v=8" defer></script>
+  <script src="pong.js?v=8" defer></script>
+  <script src="minesweeper.js?v=8" defer></script>
+  <script src="main.js?v=8" defer></script>
+</body>
+</html>
